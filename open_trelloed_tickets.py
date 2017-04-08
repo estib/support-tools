@@ -4,7 +4,6 @@ import json
 import time
 import datetime
 import argparse
-# import authenticate
 
 
 def getLastTrelloUpdateDate(url, key, token):
@@ -94,15 +93,6 @@ parser.add_argument("-t", "--trello_token", required=True, type=str, help='trell
 parser.add_argument("-a", "--trello_api_key", required=True, type=str, help='trello api key')
 
 uargs = parser.parse_args()
-# view_id = user_args.view_id
-# email = uargs.email
-# password = uargs.password
-# t_api = uargs.trello_api_key
-# t_tok = uargs.trello_token
-
-# open_view_id = '50089336'
-# hold_view_id = '50089356'
-# pend_view_id = '48813083'
 
 trello_tics = getTrelloTickets(uargs.view_id, uargs.email, uargs.password)
 
