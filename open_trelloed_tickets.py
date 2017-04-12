@@ -93,7 +93,9 @@ def openTickets(ticket_list, auth_email, auth_pass):
 
 # @tracer.wrap(service='trello-update')
 def main_script():
-    parser = argparse.ArgumentParser(description='Script to iterate through a Zendesk View to open any tickets that have trello card updates')
+    parser = argparse.ArgumentParser(
+        description='Script to iterate through a Zendesk View to open any tickets that have trello card updates. Make sure to add the required variables to the authenticate.py before you run this.'
+    )
     parser.add_argument("-v", "--view_id", type=str, required=True, help='REQUIRED: Zendesk view id nubmer. Get this from your view URL\n')
     parser.add_argument("-m", "--max", type=int, default=10, help='USEFUL: Max number of tickets to open. Default of 10. Limit of 100\n')
     parser.add_argument("-e", "--email", type=str, help='OPTIONAL: Override for email of zendesk user\n')
