@@ -25,15 +25,18 @@ def getLastTrelloUpdateDate(url, key, token):
         )
         return ts
     except Exception:
-        print "failed to get trello update timestamp."
-        raise Exception
+        print "failed to get trello update timestamp with url: %s." % (url,)
+
 
 
 # @tracer.wrap(service='trello-update')
-def getTrelloTickets(view_id, auth_email, auth_pass):
+def getTrelloTickets(view_id, auth_email, auth_pass, reverse=False):
     fr_id = '24332916'
     trello_field_ids = [24335386, 24519783, 24560146]
-    get_tickets_url = 'https://datadog.zendesk.com/api/v2/views/%s/tickets.json?sort_by=created&sort_order=asc' % (view_id,)
+    order = 'asc'
+    if reverse:
+        order = 'desc'
+    get_tickets_url = 'https://datadog.zendesk.com/api/v2/views/%s/tickets.json?sort_by=created&sort_order=%s' % (view_id, order)
     resp = json.loads(
         requests.get(url=get_tickets_url, auth=(auth_email, auth_pass)).text
     )
@@ -98,6 +101,7 @@ def main_script():
     )
     parser.add_argument("-v", "--view_id", type=str, required=True, help='REQUIRED: Zendesk view id nubmer. Get this from your view URL\n')
     parser.add_argument("-m", "--max", type=int, default=10, help='USEFUL: Max number of tickets to open. Default of 10. Limit of 100\n')
+    parser.add_argument("-r", "--reverse", action='store_true', help='USEFUL: run through ticket view in reverse chronological order.\n')
     parser.add_argument("-e", "--email", type=str, help='OPTIONAL: Override for email of zendesk user\n')
     parser.add_argument("-p", "--password", type=str, help='OPTIONAL: Override for password of zendesk user\n')
     parser.add_argument("-t", "--trello_token", type=str, help='OPTIONAL: Override for trello authentication token\n')
@@ -111,8 +115,9 @@ def main_script():
     t_api = uargs.trello_api_key or authenticate.trello_api_key
     t_tok = uargs.trello_token or authenticate.trello_api_token
     v = uargs.verbose
+    r = uargs.reverse or False
 
-    trello_tics = getTrelloTickets(view_id, email, password)
+    trello_tics = getTrelloTickets(view_id, email, password, r)
     if v:
         print "tickets to check: \n%s" % (trello_tics,)
     # compare times
